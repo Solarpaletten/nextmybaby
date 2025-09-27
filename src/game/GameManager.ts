@@ -4,7 +4,6 @@ import { PlayScene } from './scenes/PlayScene';
 
 export class GameManager {
   private game: Phaser.Game | null = null;
-  private resizeHandler = () => {};
 
   init(containerId: string) {
     const container = document.getElementById(containerId);
@@ -13,47 +12,40 @@ export class GameManager {
       return null;
     }
 
-    const width = container.clientWidth || 900;
-    const height = container.clientHeight || 520;
-
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: containerId,
-      width,
-      height,
-      backgroundColor: '#fdecef',
+      backgroundColor: '#fdf2f8',
       scene: [PlayScene],
       physics: {
         default: 'arcade',
-        arcade: {
-          gravity: { x: 0, y: 0 },
-          debug: false,
-        },
+        arcade: { gravity: { x: 0, y: 0 }, debug: false }
       },
       scale: {
-        mode: Phaser.Scale.RESIZE,
+        mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-      },
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
     };
 
     this.game = new Phaser.Game(config);
 
-    // ресайз под размеры контейнера
-    this.resizeHandler = () => {
-      if (this.game && container) {
-        this.game.scale.resize(container.clientWidth, container.clientHeight);
-      }
-    };
-    window.addEventListener('resize', this.resizeHandler);
-
+    window.addEventListener('resize', this.handleResize);
     return this.game;
   }
 
   destroy() {
-    window.removeEventListener('resize', this.resizeHandler);
+    window.removeEventListener('resize', this.handleResize);
     if (this.game) {
       this.game.destroy(true);
       this.game = null;
+    }
+  }
+
+  private handleResize = () => {
+    if (this.game) {
+      this.game.scale.resize(window.innerWidth, window.innerHeight);
     }
   }
 }

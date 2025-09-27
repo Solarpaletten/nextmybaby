@@ -18,7 +18,6 @@ export class PlayScene extends Phaser.Scene {
     // чтобы пути работали и локально, и на Render
     this.load.setPath('/mybaby/');
 
-    // полезные логи, если что-то не загрузилось
     this.load.on('loaderror', (file: any) => {
       console.error('Load error:', file?.src || file);
     });
@@ -32,26 +31,62 @@ export class PlayScene extends Phaser.Scene {
   }
 
   create() {
-    // статус слева сверху (как на макете)
+    const w = this.scale.width;
+    const h = this.scale.height;
+
+    // статус слева сверху
     this.statusText = this.add.text(24, 24, '', {
       color: '#ff66a0',
       fontFamily: 'monospace',
       fontSize: '14px',
     });
 
-    // малыш справа, крупно
-    const cx = this.scale.width * 0.7;
-    const cy = this.scale.height * 0.6;
+    // малыш в центре
+    this.baby = this.add.sprite(w / 2, h / 2, 'baby-happy').setScale(0.8).setDepth(1);
 
-    this.baby = this.add.sprite(cx, cy, 'baby-happy').setScale(0.75).setDepth(1);
+    // предметы по углам
+    this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
+    this.teddy  = this.makeItem(w - 100, h - 100, 'teddy', 'play');
+    this.crib   = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
 
-    // предметы слева внизу
-    this.bottle = this.makeItem(140, this.scale.height - 100, 'bottle', 'feed');
-    this.teddy  = this.makeItem(200, this.scale.height - 100, 'teddy',  'play');
-    this.crib   = this.makeItem(265, this.scale.height - 100, 'crib',   'sleep', 0.8);
+    // кнопка на полный экран
+    this.addFullScreenButton();
 
     this.updateStatusDisplay();
     this.setupDragAndDrop();
+
+    // реакция на ресайз окна
+    this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+      const { width, height } = gameSize;
+      this.repositionElements(width, height);
+    });
+  }
+
+  private repositionElements(w: number, h: number) {
+    if (this.baby) this.baby.setPosition(w / 2, h / 2);
+    if (this.bottle) this.bottle.setPosition(100, h - 100);
+    if (this.teddy) this.teddy.setPosition(w - 100, h - 100);
+    if (this.crib) this.crib.setPosition(100, 100);
+    if (this.statusText) this.statusText.setPosition(24, 24);
+  }
+
+  private addFullScreenButton() {
+    const button = this.add.text(this.scale.width - 60, 20, '📺', {
+      fontSize: '32px',
+      backgroundColor: '#fff',
+      padding: { left: 8, right: 8, top: 4, bottom: 4 }
+    })
+      .setInteractive()
+      .setScrollFactor(0)
+      .setDepth(10);
+
+    button.on('pointerdown', () => {
+      if (this.scale.isFullscreen) {
+        this.scale.stopFullscreen();
+      } else {
+        this.scale.startFullscreen();
+      }
+    });
   }
 
   private makeItem(x: number, y: number, key: string, action: string, scale = 0.6) {
@@ -74,11 +109,10 @@ export class PlayScene extends Phaser.Scene {
 
     this.input.on('dragend', (_p: any, obj: Phaser.GameObjects.Sprite) => {
       obj.clearTint();
-      obj.setScale(Math.max(0.4, obj.scaleX / 1.1)); // вернуть размер
+      obj.setScale(Math.max(0.4, obj.scaleX / 1.1));
 
       const near = Phaser.Math.Distance.Between(obj.x, obj.y, this.baby.x, this.baby.y) < 120;
       if (near) this.applyAction(obj.getData('action'));
-      // предмет ОСТАЁТСЯ там, где его отпустили
     });
   }
 
@@ -89,7 +123,6 @@ export class PlayScene extends Phaser.Scene {
       case 'sleep': this.babyState.sleepBaby(); break;
     }
 
-    // короткая радостная реакция малыша
     this.tweens.add({
       targets: this.baby,
       scaleX: this.baby.scaleX * 0.95,
