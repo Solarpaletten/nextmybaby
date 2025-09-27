@@ -70,7 +70,7 @@ export class PlayScene extends Phaser.Scene {
   private setupDragAndDrop() {
     // Drag события
     this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
-      gameObject.setTint(0x808080);
+      (gameObject as Phaser.GameObjects.Sprite).setTint(0x808080);
     });
 
     this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
@@ -79,7 +79,7 @@ export class PlayScene extends Phaser.Scene {
     });
 
     this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
-      gameObject.clearTint();
+      (gameObject as Phaser.GameObjects.Sprite).clearTint();
 
       // Проверяем, было ли перетаскивание на малыша
       const distance = Phaser.Math.Distance.Between(
