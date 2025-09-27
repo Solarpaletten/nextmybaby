@@ -68,34 +68,36 @@ export class PlayScene extends Phaser.Scene {
   }
 
   private setupDragAndDrop() {
-    // Drag события
-    this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
-      (gameObject as Phaser.GameObjects.Sprite).setTint(0x808080);
+    this.input.on('dragstart', (_: any, gameObject: Phaser.GameObjects.Sprite) => {
+      gameObject.setTint(0x808080);
     });
-
-    this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
-      (gameObject as Phaser.GameObjects.Sprite).x = dragX;
-      (gameObject as Phaser.GameObjects.Sprite).y = dragY;
-    });
-
-    this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
-      (gameObject as Phaser.GameObjects.Sprite).clearTint();
-
-      // Проверяем, было ли перетаскивание на малыша
+  
+    this.input.on(
+      'drag',
+      (_: any, gameObject: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
+        gameObject.x = dragX;
+        gameObject.y = dragY;
+      }
+    );
+  
+    this.input.on('dragend', (_: any, gameObject: Phaser.GameObjects.Sprite) => {
+      gameObject.clearTint();
+  
       const distance = Phaser.Math.Distance.Between(
-        gameObject.x, gameObject.y,
-        this.baby.x, this.baby.y
+        gameObject.x,
+        gameObject.y,
+        this.baby.x,
+        this.baby.y
       );
-
+  
       if (distance < 100) {
         this.handleItemUsed(gameObject);
       } else {
-        // Возвращаем предмет на место
         this.returnItemToPlace(gameObject);
       }
     });
   }
-
+  
   private handleItemUsed(item: Phaser.GameObjects.GameObject) {
     const action = item.getData('action');
     // let newMood;
