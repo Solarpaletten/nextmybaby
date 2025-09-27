@@ -1,3 +1,5 @@
+mybaby/baby.png"  
+
 pnpm run build
 
 git add . && git commit -m'fix src/game/scenes/PlayScene.ts' && git push
