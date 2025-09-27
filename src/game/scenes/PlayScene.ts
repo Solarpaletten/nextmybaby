@@ -15,7 +15,7 @@ export class PlayScene extends Phaser.Scene {
 
     preload() {
         // Загружаем ассеты
-        this.load.image('baby-happy', '/mybaby/baby.svg');   
+        this.load.image('baby-happy', '/baby.png');   
         this.load.image('baby-sad', '/mybaby/babymude.png');
         this.load.image('bottle', '/mybaby/bottle.png');
         this.load.image('teddy', '/mybaby/teddy.png');
