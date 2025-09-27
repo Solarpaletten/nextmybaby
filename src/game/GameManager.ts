@@ -49,7 +49,9 @@ export class GameManager {
 
   private handleResize = () => {
     if (this.game) {
-      const container = this.game.parent as HTMLElement;
+      const canvas = this.game.canvas;
+      const container = canvas.parentNode as HTMLElement | null;
+
       if (container) {
         this.game.scale.resize(container.clientWidth, container.clientHeight);
       }
