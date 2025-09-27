@@ -42,12 +42,15 @@ export class PlayScene extends Phaser.Scene {
     });
 
     // малыш в центре
-    this.baby = this.add.sprite(w / 2, h / 2, 'baby-happy').setScale(0.8).setDepth(1);
+    this.baby = this.add.sprite(cx, cy, 'baby-happy')
+      .setScale(0.75)
+      .setDepth(1)
+      .setInteractive({ draggable: true });
 
     // предметы по углам
     this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
-    this.teddy  = this.makeItem(w - 100, h - 100, 'teddy', 'play');
-    this.crib   = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
+    this.teddy = this.makeItem(w - 100, h - 100, 'teddy', 'play');
+    this.crib = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
 
     // кнопка на полный экран
     this.addFullScreenButton();
@@ -102,7 +105,7 @@ export class PlayScene extends Phaser.Scene {
       obj.setScale(obj.scaleX * 1.1);
     });
 
-    this.input.on('drag', (_p: any, obj: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
+    this.input.on('drag', (_p, obj: Phaser.GameObjects.Sprite, dragX, dragY) => {
       obj.x = dragX;
       obj.y = dragY;
     });
@@ -116,7 +119,7 @@ export class PlayScene extends Phaser.Scene {
     });
   }
 
-  private applyAction(action: 'feed'|'play'|'sleep') {
+  private applyAction(action: 'feed' | 'play' | 'sleep') {
     switch (action) {
       case 'feed': this.babyState.feedBaby(); break;
       case 'play': this.babyState.playWithToy(); break;
