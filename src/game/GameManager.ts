@@ -22,7 +22,7 @@ export class GameManager {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 0 },
+          gravity: { x: 0, y: 0 }, // Указываем оба значения
           debug: false,
         },
       },
