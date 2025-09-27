@@ -1,3 +1,5 @@
+delete mildeware.ts
+
 `````md
 # Dashka Next.js Core Template
 
