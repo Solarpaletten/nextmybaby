@@ -107,8 +107,8 @@ export class PlayScene extends Phaser.Scene {
     private setupDragAndDrop() {
         // Drag события
         this.input.on('dragstart', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
-            gameObject.setTint(0x808080);
-            gameObject.setScale(0.7); // Увеличиваем при захвате
+            (gameObject as Phaser.GameObjects.Sprite).setTint(0x808080);
+            (gameObject as Phaser.GameObjects.Sprite).setScale(0.7); // Увеличиваем при захвате
 
             // Скрываем подпись во время перетаскивания
             const label = gameObject.getData('labelText');
@@ -121,8 +121,8 @@ export class PlayScene extends Phaser.Scene {
         });
 
         this.input.on('dragend', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
-            gameObject.clearTint();
-            gameObject.setScale(0.6); // Возвращаем исходный размер
+            (gameObject as Phaser.GameObjects.Sprite).clearTint();
+            (gameObject as Phaser.GameObjects.Sprite).setScale(0.6); // Возвращаем исходный размер
 
             // Проверяем расстояние до малыша
             const distance = Phaser.Math.Distance.Between(
@@ -141,12 +141,12 @@ export class PlayScene extends Phaser.Scene {
         // Добавляем hover эффекты
         this.input.on('gameobjectover', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             if (gameObject === this.baby) return;
-            gameObject.setTint(0xdddddd);
+            (gameObject as Phaser.GameObjects.Sprite).setTint(0xdddddd);
         });
 
         this.input.on('gameobjectout', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             if (gameObject === this.baby) return;
-            gameObject.clearTint();
+            (gameObject as Phaser.GameObjects.Sprite).clearTint();
         });
     }
 
