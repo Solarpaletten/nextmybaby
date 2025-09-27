@@ -37,18 +37,25 @@ export class PlayScene extends Phaser.Scene {
     const cx = w / 2;
     const cy = h / 2;
   
-    // малыш в центре, draggable
+    // малыш
     this.baby = this.add.sprite(cx, cy, 'baby-happy')
       .setScale(0.75)
       .setDepth(1)
       .setInteractive({ draggable: true });
   
-    // предметы по углам
+    // предметы
     this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
     this.teddy  = this.makeItem(w - 100, h - 100, 'teddy', 'play');
     this.crib   = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
   
-    // кнопка на полный экран
+    // создаём статус в левом верхнем углу
+    this.statusText = this.add.text(24, 24, '', {
+      font: '16px Arial',
+      color: '#ff69b4',
+      align: 'left'
+    }).setDepth(5);
+  
+    // кнопка fullscreen
     this.addFullScreenButton();
   
     // обработчик ресайза
@@ -57,11 +64,11 @@ export class PlayScene extends Phaser.Scene {
       this.repositionElements(width, height);
     });
   
-    // вот эти два вызова ОБЯЗАТЕЛЬНО
+    // теперь безопасно
     this.updateStatusDisplay();
     this.setupDragAndDrop();
-  }  
-
+  }
+  
   private repositionElements(w: number, h: number) {
     if (this.baby) this.baby.setPosition(w / 2, h / 2);
     if (this.bottle) this.bottle.setPosition(100, h - 100);
