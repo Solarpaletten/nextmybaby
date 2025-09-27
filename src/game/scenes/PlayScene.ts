@@ -97,20 +97,23 @@ export class PlayScene extends Phaser.Scene {
   }
 
   private setupDragAndDrop() {
-    this.input.on('dragstart', (_p: any, obj: Phaser.GameObjects.Sprite) => {
+    this.input.on('dragstart', (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite) => {
       obj.setTint(0x808080);
       obj.setScale(obj.scaleX * 1.1);
     });
 
-    this.input.on('drag', (_p, obj: Phaser.GameObjects.Sprite, dragX, dragY) => {
-      obj.x = dragX;
-      obj.y = dragY;
-    });
+    this.input.on(
+      'drag',
+      (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
+        obj.x = dragX;
+        obj.y = dragY;
+      }
+    );
 
-    this.input.on('dragend', (_p: any, obj: Phaser.GameObjects.Sprite) => {
+    this.input.on('dragend', (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite) => {
       obj.clearTint();
       obj.setScale(Math.max(0.4, obj.scaleX / 1.1));
-
+    
       const near = Phaser.Math.Distance.Between(obj.x, obj.y, this.baby.x, this.baby.y) < 120;
       if (near) this.applyAction(obj.getData('action'));
     });
