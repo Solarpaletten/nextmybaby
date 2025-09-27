@@ -1,9 +1,10 @@
-// src/game/GameManager.ts - Финальная версия
+// src/game/GameManager.ts
 import * as Phaser from 'phaser';
 import { PlayScene } from './scenes/PlayScene';
 
 export class GameManager {
   private game: Phaser.Game | null = null;
+  private resizeHandler = () => {};
 
   init(containerId: string) {
     const container = document.getElementById(containerId);
@@ -12,17 +13,20 @@ export class GameManager {
       return null;
     }
 
+    const width = container.clientWidth || 900;
+    const height = container.clientHeight || 520;
+
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: container.clientWidth || 800,
-      height: container.clientHeight || 600,
       parent: containerId,
-      backgroundColor: '#fdf2f8',
+      width,
+      height,
+      backgroundColor: '#fdecef',
       scene: [PlayScene],
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { x: 0, y: 0 }, // Указываем оба значения
+          gravity: { x: 0, y: 0 },
           debug: false,
         },
       },
@@ -34,27 +38,22 @@ export class GameManager {
 
     this.game = new Phaser.Game(config);
 
-    window.addEventListener('resize', this.handleResize);
+    // ресайз под размеры контейнера
+    this.resizeHandler = () => {
+      if (this.game && container) {
+        this.game.scale.resize(container.clientWidth, container.clientHeight);
+      }
+    };
+    window.addEventListener('resize', this.resizeHandler);
 
     return this.game;
   }
 
   destroy() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('resize', this.resizeHandler);
     if (this.game) {
       this.game.destroy(true);
       this.game = null;
     }
   }
-
-  private handleResize = () => {
-    if (this.game) {
-      const canvas = this.game.canvas;
-      const container = canvas.parentNode as HTMLElement | null;
-
-      if (container) {
-        this.game.scale.resize(container.clientWidth, container.clientHeight);
-      }
-    }
-  };
 }

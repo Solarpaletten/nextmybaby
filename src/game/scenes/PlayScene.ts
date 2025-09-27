@@ -1,4 +1,4 @@
-// src/game/scenes/PlayScene.ts - Финальная версия с drag&drop
+// src/game/scenes/PlayScene.ts
 import * as Phaser from 'phaser';
 import { BabyState } from '../entities/BabyState';
 
@@ -7,134 +7,105 @@ export class PlayScene extends Phaser.Scene {
   private bottle!: Phaser.GameObjects.Sprite;
   private teddy!: Phaser.GameObjects.Sprite;
   private crib!: Phaser.GameObjects.Sprite;
-  private babyState: BabyState;
+  private babyState = new BabyState();
   private statusText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'PlayScene' });
-    this.babyState = new BabyState();
   }
 
   preload() {
-    // Загружаем ассеты
-    this.load.image('baby-happy', '/mybaby/baby.png');
-    this.load.image('bottle', '/mybaby/bottle.png');
-    this.load.image('teddy', '/mybaby/teddy.png');
-    this.load.image('crib', '/mybaby/crib.png');
+    // чтобы пути работали и локально, и на Render
+    this.load.setPath('/mybaby/');
+
+    // полезные логи, если что-то не загрузилось
+    this.load.on('loaderror', (file: any) => {
+      console.error('Load error:', file?.src || file);
+    });
+    this.load.on('filecomplete-image-baby-happy', () => console.log('baby.png loaded'));
+    this.load.on('complete', () => console.log('All assets loaded'));
+
+    this.load.image('baby-happy', 'baby.png');
+    this.load.image('bottle', 'bottle.png');
+    this.load.image('teddy', 'teddy.png');
+    this.load.image('crib', 'crib.png');
   }
 
   create() {
-    // Создаем малыша в центре
-    this.baby = this.add.sprite(400, 300, 'baby-happy');
-    this.baby.setScale(0.8);
-    this.baby.setDepth(1);
-
-    // Создаем предметы с drag&drop
-    this.bottle = this.createDraggableItem(200, 500, 'bottle', 'feed');
-    this.teddy = this.createDraggableItem(300, 500, 'teddy', 'play');
-    this.crib = this.createDraggableItem(400, 500, 'crib', 'sleep');
-
-    // Статус малыша
-    this.statusText = this.add.text(50, 50, '', {
-      fontSize: '18px',
-      color: '#ff69b4'
+    // статус слева сверху (как на макете)
+    this.statusText = this.add.text(24, 24, '', {
+      color: '#ff66a0',
+      fontFamily: 'monospace',
+      fontSize: '14px',
     });
 
-    // Настраиваем drag & drop
-    this.setupDragAndDrop();
+    // малыш справа, крупно
+    const cx = this.scale.width * 0.7;
+    const cy = this.scale.height * 0.6;
 
-    // Обновляем статус
+    this.baby = this.add.sprite(cx, cy, 'baby-happy').setScale(0.75).setDepth(1);
+
+    // предметы слева внизу
+    this.bottle = this.makeItem(140, this.scale.height - 100, 'bottle', 'feed');
+    this.teddy  = this.makeItem(200, this.scale.height - 100, 'teddy',  'play');
+    this.crib   = this.makeItem(265, this.scale.height - 100, 'crib',   'sleep', 0.8);
+
     this.updateStatusDisplay();
+    this.setupDragAndDrop();
   }
 
-  private createDraggableItem(x: number, y: number, texture: string, action: string) {
-    const item = this.add.sprite(x, y, texture);
-    item.setScale(0.6);
-    item.setInteractive({ draggable: true });
-    item.setDepth(2);
-    item.setData('action', action);
-    return item;
+  private makeItem(x: number, y: number, key: string, action: string, scale = 0.6) {
+    const s = this.add.sprite(x, y, key).setScale(scale).setDepth(2);
+    s.setInteractive({ draggable: true });
+    s.setData('action', action);
+    return s;
   }
 
   private setupDragAndDrop() {
-    this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.Sprite) => {
-      gameObject.setTint(0x808080);
-      gameObject.setScale(0.7);
+    this.input.on('dragstart', (_p: any, obj: Phaser.GameObjects.Sprite) => {
+      obj.setTint(0x808080);
+      obj.setScale(obj.scaleX * 1.1);
     });
 
-    this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
-      gameObject.x = dragX;
-      gameObject.y = dragY;
+    this.input.on('drag', (_p: any, obj: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
+      obj.x = dragX;
+      obj.y = dragY;
     });
 
-    this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.Sprite) => {
-      gameObject.clearTint();
-      gameObject.setScale(0.6);
+    this.input.on('dragend', (_p: any, obj: Phaser.GameObjects.Sprite) => {
+      obj.clearTint();
+      obj.setScale(Math.max(0.4, obj.scaleX / 1.1)); // вернуть размер
 
-      // Проверяем расстояние до малыша
-      const distance = Phaser.Math.Distance.Between(
-        gameObject.x, gameObject.y,
-        this.baby.x, this.baby.y
-      );
-
-      if (distance < 100) {
-        this.handleItemUsed(gameObject);
-      } else {
-        // Запоминаем новую позицию как "оригинальную"
-        gameObject.setData('originalX', gameObject.x);
-        gameObject.setData('originalY', gameObject.y);
-      }
+      const near = Phaser.Math.Distance.Between(obj.x, obj.y, this.baby.x, this.baby.y) < 120;
+      if (near) this.applyAction(obj.getData('action'));
+      // предмет ОСТАЁТСЯ там, где его отпустили
     });
   }
 
-  private handleItemUsed(item: Phaser.GameObjects.Sprite) {
-    const action = item.getData('action');
-    let newMood: string;
-
+  private applyAction(action: 'feed'|'play'|'sleep') {
     switch (action) {
-      case 'feed':
-        newMood = this.babyState.feedBaby();
-        break;
-      case 'play':
-        newMood = this.babyState.playWithToy();
-        break;
-      case 'sleep':
-        newMood = this.babyState.sleepBaby();
-        break;
-      default:
-        newMood = 'sad';
+      case 'feed': this.babyState.feedBaby(); break;
+      case 'play': this.babyState.playWithToy(); break;
+      case 'sleep': this.babyState.sleepBaby(); break;
     }
 
-    // Обновляем спрайт малыша
-    this.updateBabySprite();
-
-    // Анимация реакции малыша
+    // короткая радостная реакция малыша
     this.tweens.add({
       targets: this.baby,
-      scaleX: 0.9,
-      scaleY: 0.9,
-      duration: 200,
+      scaleX: this.baby.scaleX * 0.95,
+      scaleY: this.baby.scaleY * 0.95,
       yoyo: true,
-      ease: 'Power2'
+      duration: 180,
+      ease: 'Sine.easeInOut',
     });
 
-    // Обновляем статус
     this.updateStatusDisplay();
-
-    console.log(`Использован предмет: ${action}, новое настроение: ${newMood}`);
-  }
-
-  private updateBabySprite() {
-    this.baby.setTexture('baby-happy');
   }
 
   private updateStatusDisplay() {
-    const stats = this.babyState.getStats();
-    this.statusText.setText(`
-Настроение: ${stats.mood}
-Счастье: ${Math.round(stats.happiness)}
-Голод: ${Math.round(stats.hunger)}
-Энергия: ${Math.round(stats.energy)}
-    `.trim());
+    const s = this.babyState.getStats();
+    this.statusText.setText(
+      `Настроение: ${s.mood}\nСчастье: ${Math.round(s.happiness)}\nГолод: ${Math.round(s.hunger)}\nЭнергия: ${Math.round(s.energy)}`
+    );
   }
 }
