@@ -106,7 +106,7 @@ export class PlayScene extends Phaser.Scene {
 
     private setupDragAndDrop() {
         // Drag события
-        this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        this.input.on('dragstart', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             gameObject.setTint(0x808080);
             gameObject.setScale(0.7); // Увеличиваем при захвате
 
@@ -115,12 +115,12 @@ export class PlayScene extends Phaser.Scene {
             if (label) label.setVisible(false);
         });
 
-        this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
+        this.input.on('drag', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
             gameObject.x = dragX;
             gameObject.y = dragY;
         });
 
-        this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        this.input.on('dragend', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             gameObject.clearTint();
             gameObject.setScale(0.6); // Возвращаем исходный размер
 
@@ -130,7 +130,7 @@ export class PlayScene extends Phaser.Scene {
                 this.baby.x, this.baby.y
             );
 
-            if (distance < 120) { // Увеличили зону взаимодействия
+            if (distance < 200) { // Увеличили зону взаимодействия
                 this.handleItemUsed(gameObject);
             } else {
                 // Возвращаем предмет на место
@@ -139,12 +139,12 @@ export class PlayScene extends Phaser.Scene {
         });
 
         // Добавляем hover эффекты
-        this.input.on('gameobjectover', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        this.input.on('gameobjectover', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             if (gameObject === this.baby) return;
             gameObject.setTint(0xdddddd);
         });
 
-        this.input.on('gameobjectout', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        this.input.on('gameobjectout', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
             if (gameObject === this.baby) return;
             gameObject.clearTint();
         });
@@ -251,7 +251,7 @@ export class PlayScene extends Phaser.Scene {
             targets: item,
             x: originalX,
             y: originalY,
-            duration: 400,
+            duration: 800,
             ease: 'Back.easeOut',
             onComplete: () => {
                 // Показываем подпись обратно
