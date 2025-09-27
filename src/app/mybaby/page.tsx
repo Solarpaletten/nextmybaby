@@ -10,10 +10,13 @@ export default function MyBabyPage() {
 
   useEffect(() => {
     if (gameRef.current && !gameManagerRef.current) {
-      gameManagerRef.current = new GameManager();
-      gameManagerRef.current.init('phaser-game');
+      // Динамический импорт только в браузере
+      import('../../game/GameManager').then(({ GameManager }) => {
+        gameManagerRef.current = new GameManager();
+        gameManagerRef.current.init('phaser-game');
+      });
     }
-
+  
     return () => {
       if (gameManagerRef.current) {
         gameManagerRef.current.destroy();

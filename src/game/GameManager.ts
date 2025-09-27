@@ -1,5 +1,5 @@
 // src/game/GameManager.ts - Полноэкранная версия
-import * as Phaser from 'phaser';
+import { GameManager } from '../../game/GameManager';
 import { PlayScene } from './scenes/PlayScene';
 
 export class GameManager {
