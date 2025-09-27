@@ -8,8 +8,8 @@ export class GameManager {
   init(containerId: string) {
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: window.innerWidth - 100, // Почти на весь экран с отступами
-      height: window.innerHeight - 200, // Оставляем место для заголовка
+      width: 800, // Почти на весь экран с отступами
+      height: 600, // Оставляем место для заголовка
       parent: containerId,
       backgroundColor: '#fdf2f8',
       scene: [PlayScene],
