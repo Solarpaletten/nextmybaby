@@ -41,11 +41,11 @@ export class PlayScene extends Phaser.Scene {
       fontSize: '14px',
     });
 
-    // малыш в центре
+    // малыш в центре, но теперь тоже draggable
     this.baby = this.add.sprite(cx, cy, 'baby-happy')
       .setScale(0.75)
       .setDepth(1)
-      .setInteractive({ draggable: true });
+      .setInteractive({ draggable: true }); // как у предметов
 
     // предметы по углам
     this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
