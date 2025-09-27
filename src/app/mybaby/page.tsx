@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 
 export default function MyBabyPage() {
   const gameRef = useRef<HTMLDivElement>(null);
-  const gameManagerRef = useRef<GameManager | null>(null);
+  const gameManagerRef = useRef<any>(null);
 
   useEffect(() => {
     if (gameRef.current && !gameManagerRef.current) {

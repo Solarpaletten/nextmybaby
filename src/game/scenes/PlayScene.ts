@@ -98,7 +98,7 @@ export class PlayScene extends Phaser.Scene {
 
   private handleItemUsed(item: Phaser.GameObjects.GameObject) {
     const action = item.getData('action');
-    let newMood;
+    // let newMood;
 
     switch (action) {
       case 'feed':
