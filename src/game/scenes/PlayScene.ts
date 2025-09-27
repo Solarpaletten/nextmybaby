@@ -1,5 +1,5 @@
 // src/game/scenes/PlayScene.ts
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import { BabyState } from '../entities/BabyState';
 
 export class PlayScene extends Phaser.Scene {
@@ -83,9 +83,9 @@ export class PlayScene extends Phaser.Scene {
       gameObject.clearTint();
       
       // Проверяем, было ли перетаскивание на малыша
-      const distance = Phaser.Geom.Point.Distance(
-        { x: gameObject.x, y: gameObject.y },
-        { x: this.baby.x, y: this.baby.y }
+      const distance = Phaser.Math.Distance.Between(
+        gameObject.x, gameObject.y,
+        this.baby.x, this.baby.y
       );
 
       if (distance < 100) {

@@ -1,5 +1,5 @@
 // src/game/GameManager.ts
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import { PlayScene } from './scenes/PlayScene';
 
 export class GameManager {
