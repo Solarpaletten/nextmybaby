@@ -132,7 +132,7 @@ export class PlayScene extends Phaser.Scene {
     this.updateStatusDisplay();
   }
 
-  private updateBabySprite(mood?: string) {
+  private updateBabySprite() {
     // Пока используем только одну текстуру
     this.baby.setTexture('baby-happy');
 }
