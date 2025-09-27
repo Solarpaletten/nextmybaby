@@ -17,10 +17,10 @@ export class PlayScene extends Phaser.Scene {
 
   preload() {
     // Загружаем ассеты
-    this.load.image('baby-happy', '/mybaby/baby.png');
-    this.load.image('bottle', '/mybaby/bottle.png');
-    this.load.image('teddy', '/mybaby/teddy.png');
-    this.load.image('crib', '/mybaby/crib.png');
+    this.load.image('baby-happy', 'baby.png');
+    this.load.image('bottle', 'bottle.png');
+    this.load.image('teddy', 'teddy.png');
+    this.load.image('crib', 'crib.png');
   }
 
   create() {
