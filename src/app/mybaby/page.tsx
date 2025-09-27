@@ -1,7 +1,7 @@
-// src/app/mybaby/page.tsx - Безопасная версия для деплоя
+// src/app/mybaby/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface BabyStats {
   happiness: number;
@@ -19,6 +19,16 @@ export default function MyBabyPage() {
   });
 
   const [gameLoaded, setGameLoaded] = useState(false);
+  const phaserRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (gameLoaded && phaserRef.current) {
+      import('../../game/GameManager').then(({ GameManager }) => {
+        const manager = new GameManager();
+        manager.init(phaserRef.current!.id);
+      });
+    }
+  }, [gameLoaded]);
 
   const handleFeed = () => {
     setStats(prev => ({
@@ -46,20 +56,6 @@ export default function MyBabyPage() {
     }));
   };
 
-  const loadPhaserGame = async () => {
-    try {
-      // Динамический импорт только в браузере
-      if (typeof window !== 'undefined') {
-        const { GameManager } = await import('../../game/GameManager');
-        const gameManager = new GameManager();
-        gameManager.init('phaser-game');
-        setGameLoaded(true);
-      }
-    } catch (error) {
-      console.error('Failed to load Phaser game:', error);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <h1 className="text-3xl font-bold text-pink-600 mb-6">My Mini Baby - Game Edition</h1>
@@ -81,7 +77,7 @@ export default function MyBabyPage() {
           <div className="text-6xl mb-4">👶</div>
           <p className="text-gray-600 mb-4">Малыш готов к игре!</p>
           <button 
-            onClick={loadPhaserGame}
+            onClick={() => setGameLoaded(true)}
             className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg font-semibold"
           >
             Загрузить игру
@@ -90,7 +86,8 @@ export default function MyBabyPage() {
       ) : (
         <div 
           id="phaser-game" 
-          className="border-2 border-pink-200 rounded-lg shadow-lg"
+          ref={phaserRef}
+          className="border-2 border-pink-200 rounded-lg shadow-lg w-full h-[600px]"
         />
       )}
       
