@@ -1,3 +1,5 @@
+git add . && git commit -m'fix src/game/scenes/PlayScene.ts' && git push
+
 src/game/scenes/PlayScene.ts
 
 delete mildeware.ts
