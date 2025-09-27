@@ -33,37 +33,34 @@ export class PlayScene extends Phaser.Scene {
   create() {
     const w = this.scale.width;
     const h = this.scale.height;
-
-    // статус слева сверху
-    this.statusText = this.add.text(24, 24, '', {
-      color: '#ff66a0',
-      fontFamily: 'monospace',
-      fontSize: '14px',
-    });
-
-    // малыш в центре, но теперь тоже draggable
+  
+    const cx = w / 2;
+    const cy = h / 2;
+  
+    // малыш в центре, draggable
     this.baby = this.add.sprite(cx, cy, 'baby-happy')
       .setScale(0.75)
       .setDepth(1)
-      .setInteractive({ draggable: true }); // как у предметов
-
+      .setInteractive({ draggable: true });
+  
     // предметы по углам
     this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
-    this.teddy = this.makeItem(w - 100, h - 100, 'teddy', 'play');
-    this.crib = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
-
+    this.teddy  = this.makeItem(w - 100, h - 100, 'teddy', 'play');
+    this.crib   = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
+  
     // кнопка на полный экран
     this.addFullScreenButton();
-
-    this.updateStatusDisplay();
-    this.setupDragAndDrop();
-
-    // реакция на ресайз окна
+  
+    // обработчик ресайза
     this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
       const { width, height } = gameSize;
       this.repositionElements(width, height);
     });
-  }
+  
+    // вот эти два вызова ОБЯЗАТЕЛЬНО
+    this.updateStatusDisplay();
+    this.setupDragAndDrop();
+  }  
 
   private repositionElements(w: number, h: number) {
     if (this.baby) this.baby.setPosition(w / 2, h / 2);
