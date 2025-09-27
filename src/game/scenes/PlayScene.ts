@@ -74,8 +74,8 @@ export class PlayScene extends Phaser.Scene {
     });
 
     this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
-      gameObject.x = dragX;
-      gameObject.y = dragY;
+      (gameObject as Phaser.GameObjects.Sprite).x = dragX;
+      (gameObject as Phaser.GameObjects.Sprite).y = dragY;
     });
 
     this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
@@ -113,7 +113,7 @@ export class PlayScene extends Phaser.Scene {
     }
 
     // Обновляем спрайт малыша
-    this.updateBabySprite(newMood);
+    this.updateBabySprite();
 
     // Анимация реакции
     this.tweens.add({
@@ -135,7 +135,7 @@ export class PlayScene extends Phaser.Scene {
   private updateBabySprite() {
     // Пока используем только одну текстуру
     this.baby.setTexture('baby-happy');
-}
+  }
 
   private returnItemToPlace(item: Phaser.GameObjects.GameObject) {
     const originalX = item.getData('originalX') || item.x;
