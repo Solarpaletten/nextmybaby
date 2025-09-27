@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
+import { DndContext, useDraggable, DragEndEvent } from "@dnd-kit/core";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -33,7 +33,7 @@ function DraggableBaby({ mood }: { mood: string }) {
     : undefined;
 
   return (
-    <div ref={setNodeRef} {...listeners} {...attributes} style={style}>
+    <div ref={setNodeRef} {...listeners} {...attributes} style={style} className="relative">
       <motion.div
         key={mood}
         initial={{ scale: 1 }}
@@ -41,11 +41,7 @@ function DraggableBaby({ mood }: { mood: string }) {
         transition={{ duration: 0.6 }}
       >
         <Image
-          src={
-            mood === "happy"
-              ? "/mybaby/babysmile.svg"
-              : "/mybaby/baby.png"
-          }
+          src={mood === "happy" ? "/mybaby/babysmile.svg" : "/mybaby/baby.png"}
           alt="Baby"
           width={200}
           height={200}
@@ -63,7 +59,7 @@ function DraggableBaby({ mood }: { mood: string }) {
 export default function MyBabyPage() {
   const [mood, setMood] = useState<"sad" | "happy" | "sleep" | "play" | "calm" | "talk">("sad");
 
-  function handleDragEnd(event: any) {
+  function handleDragEnd(event: DragEndEvent) {
     if (event.over?.id === "baby") {
       switch (event.active.id) {
         case "bottle":

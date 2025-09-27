@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+export function middleware(request: Request) {
+  return new Response("OK");
+}
 
   // Базовые security заголовки
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');
