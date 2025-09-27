@@ -1,3 +1,5 @@
+fix PlayScene.ts
+
 mybaby/baby.png"  
 
 pnpm run build
