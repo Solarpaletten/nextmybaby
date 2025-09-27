@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { GameManager } from '../../game/GameManager';
 
 export default function MyBabyPage() {
   const gameRef = useRef<HTMLDivElement>(null);
