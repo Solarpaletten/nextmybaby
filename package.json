@@ -23,6 +23,7 @@
     "framer-motion": "^12.23.22",
     "jspdf": "^3.0.3",
     "next": "15.5.4",
+    "phaser": "^3.90.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "zod": "^4.1.11"
@@ -31,6 +32,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/matter-js": "^0.20.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
