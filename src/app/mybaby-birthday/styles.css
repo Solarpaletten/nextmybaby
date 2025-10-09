@@ -1,0 +1,100 @@
+/* ==== Birthday Card Styles ==== */
+
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+    z-index: 10;
+  }
+  
+  h1 {
+    color: #ff6b9d;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .age {
+    font-size: 4em;
+    color: #ffa500;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+    margin: 20px 0;
+  }
+  
+  .poem {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px 0;
+    border-left: 5px solid #ff6b9d;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: left;
+  }
+  
+  .poem p {
+    color: #333;
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin: 8px 0;
+  }
+  
+  .lyrics {
+    background: #fffacd;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    font-size: 1.1em;
+    color: #333;
+    display: none;
+    border: 3px dashed #ff6b9d;
+  }
+  
+  .lyrics.show {
+    display: block;
+    animation: fadeIn 0.5s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .button {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffa500 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2em;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 10px;
+    box-shadow: 0 5px 15px rgba(255,107,157,0.4);
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  
+  .button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,107,157,0.6);
+  }
+  
+  .button:active {
+    transform: translateY(0);
+  }
+  
