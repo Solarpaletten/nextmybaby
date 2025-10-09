@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С Днём Рождения, Дашенька!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #ff6b9d;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .age {
+            font-size: 4em;
+            color: #ffa500;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            margin: 20px 0;
+        }
+
+        .stage {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(180deg, #fff9e6 0%, #ffe6f0 100%);
+            border-radius: 20px;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mybaby {
+            width: 200px;
+            height: 280px;
+            animation: dance 1s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .mybaby:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes dance {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .baby-head {
+            width: 100px;
+            height: 100px;
+            background: #ffd4a3;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid #ffb366;
+        }
+
+        .baby-nose {
+            width: 12px;
+            height: 8px;
+            background: #ffb366;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .baby-eye {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 32px;
+            border: 2px solid #333;
+        }
+
+        .baby-eye::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .baby-eye.left { left: 22px; }
+        .baby-eye.right { right: 22px; }
+
+        .baby-mouth {
+            width: 45px;
+            height: 25px;
+            border: 3px solid #ff6b9d;
+            border-top: none;
+            border-radius: 0 0 45px 45px;
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .baby-mouth::before {
+            content: '';
+            width: 15px;
+            height: 8px;
+            background: #ff6b9d;
+            border-radius: 0 0 15px 15px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .baby-body {
+            width: 120px;
+            height: 100px;
+            background: #87ceeb;
+            border-radius: 30px;
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid #5fa8d3;
+        }
+
+        .baby-arm {
+            width: 30px;
+            height: 70px;
+            background: #ffd4a3;
+            border-radius: 15px;
+            position: absolute;
+            top: 100px;
+            border: 3px solid #ffb366;
+        }
+
+        .baby-arm.left {
+            left: 20px;
+            transform: rotate(-20deg);
+        }
+
+        .baby-arm.right {
+            right: 20px;
+            transform: rotate(20deg);
+        }
+
+        .baby-leg {
+            width: 35px;
+            height: 80px;
+            background: #ffd4a3;
+            border-radius: 17px;
+            position: absolute;
+            bottom: 0;
+            border: 3px solid #ffb366;
+        }
+
+        .baby-leg.left { left: 55px; }
+        .baby-leg.right { right: 55px; }
+
+        .baby-diaper {
+            width: 80px;
+            height: 40px;
+            background: white;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid #e0e0e0;
+        }
+
+        .baby-hair {
+            width: 60px;
+            height: 30px;
+            background: #8b4513;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .singing .baby-arm {
+            animation: wave 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(-60deg); }
+        }
+
+        .singing .baby-arm.right {
+            animation: waveRight 0.5s ease-in-out infinite;
+        }
+
+        @keyframes waveRight {
+            0%, 100% { transform: rotate(20deg); }
+            50% { transform: rotate(60deg); }
+        }
+
+        .microphone {
+            width: 15px;
+            height: 30px;
+            background: #333;
+            border-radius: 10px 10px 5px 5px;
+            position: absolute;
+            right: 10px;
+            top: 120px;
+            display: none;
+        }
+
+        .microphone::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #666;
+            border-radius: 50%;
+            position: absolute;
+            top: -5px;
+            left: -2.5px;
+        }
+
+        .singing .microphone {
+            display: block;
+            animation: micMove 0.5s ease-in-out infinite;
+        }
+
+        @keyframes micMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .singing {
+            animation: sing 0.5s ease-in-out infinite !important;
+        }
+
+        @keyframes sing {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-10deg); }
+            75% { transform: scale(1.1) rotate(10deg); }
+        }
+
+        .poem {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #ff6b9d;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .poem p {
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 8px 0;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffa500 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(255,107,157,0.4);
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,107,157,0.6);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .balloons {
+            position: absolute;
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .balloon1 { top: 20px; left: 50px; animation-delay: 0s; }
+        .balloon2 { top: 80px; right: 50px; animation-delay: 0.5s; }
+        .balloon3 { bottom: 100px; left: 30px; animation-delay: 1s; }
+        .balloon4 { bottom: 50px; right: 80px; animation-delay: 1.5s; }
+
+        .lyrics {
+            background: #fffacd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            color: #333;
+            display: none;
+            border: 3px dashed #ff6b9d;
+        }
+
+        .lyrics.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hearts {
+            position: absolute;
+            font-size: 30px;
+            animation: heartFloat 4s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes heartFloat {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 1; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="balloons balloon1">🎈</div>
+    <div class="balloons balloon2">🎈</div>
+    <div class="balloons balloon3">🎈</div>
+    <div class="balloons balloon4">🎈</div>
+
+    <div class="container">
+        <h1>🎉 С Днём Рождения! 🎉</h1>
+        <h2 style="color: #764ba2; margin-bottom: 10px;">Дашенька!</h2>
+        <div class="age">10 ЛЕТ!</div>
+
+        <div class="stage">
+            <div class="hearts" style="top: 20px; left: 30px;">💕</div>
+            <div class="hearts" style="top: 50px; right: 40px; animation-delay: 1s;">💖</div>
+            <div class="hearts" style="bottom: 30px; left: 50px; animation-delay: 2s;">💗</div>
+            <div class="mybaby" id="baby" onclick="toggleSing()">
+                <div class="baby-hair"></div>
+                <div class="baby-head">
+                    <div class="baby-eye left"></div>
+                    <div class="baby-eye right"></div>
+                    <div class="baby-nose"></div>
+                    <div class="baby-mouth"></div>
+                </div>
+                <div class="baby-arm left"></div>
+                <div class="baby-arm right"></div>
+                <div class="baby-body"></div>
+                <div class="baby-diaper"></div>
+                <div class="baby-leg left"></div>
+                <div class="baby-leg right"></div>
+                <div class="microphone"></div>
+            </div>
+        </div>
+
+        <div class="poem">
+            <p>🌟 Дашенька, тебе сегодня десять лет,</p>
+            <p>Ты умница, талантливее всех на свете нет!</p>
+            <p>Рисуешь ты, и лепишь, и танцуешь,</p>
+            <p>В гимнастике всех лучше выступаешь!</p>
+            <br>
+            <p>🎨 Фломастеров аж восемьдесят у тебя,</p>
+            <p>MyMiniBaby создаёшь, любя!</p>
+            <p>Домики и комнаты для малыша,</p>
+            <p>Как всё красиво, просто красота!</p>
+            <br>
+            <p>📚 Английский изучаешь, математика на пять,</p>
+            <p>Тебя нельзя не похвалить, нельзя не обнимать!</p>
+            <p>Занимайся тем, что любишь, что по сердцу,</p>
+            <p>И счастье будет рядом, откроется все дверцы!</p>
+            <br>
+            <p>💝 Желаем здоровья, радости, добра,</p>
+            <p>Пусть сбудутся все-все твои мечты!</p>
+            <p>Папа любит очень-очень сильно,</p>
+            <p>С Днём Рождения, доченька, расти красивой! 🎂✨</p>
+        </div>
+
+        <button class="button" onclick="toggleSing()">🎵 Спеть песенку!</button>
+        <button class="button" onclick="makeWish()">🌟 Загадать желание!</button>
+
+        <div class="lyrics" id="lyrics">
+            <h3 style="color: #ff6b9d; text-align: center; margin-bottom: 15px;">🎤 MyMiniBaby поёт:</h3>
+            <p><strong>♫ С Днём Рождения, Дашенька! ♫</strong></p>
+            <p>Тебе сегодня десять лет,</p>
+            <p>Ты ярче всех на свете!</p>
+            <p>Пусть счастье, радость и успех</p>
+            <p>Всегда с тобой на свете!</p>
+            <br>
+            <p>Рисуй, танцуй, твори, мечтай,</p>
+            <p>Учись, играй, смейся!</p>
+            <p>И MyBaby не забывай,</p>
+            <p>Пусть чудеса случаются! 🎶</p>
+        </div>
+    </div>
+
+    <script>
+        let isSinging = false;
+        const baby = document.getElementById('baby');
+        const lyrics = document.getElementById('lyrics');
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.background = ['#ff6b9d', '#ffa500', '#667eea', '#764ba2', '#00ff00'][Math.floor(Math.random() * 5)];
+                document.body.appendChild(confetti);
+            }
+        }
+
+        function toggleSing() {
+            isSinging = !isSinging;
+            if (isSinging) {
+                baby.classList.add('singing');
+                lyrics.classList.add('show');
+                createConfetti();
+            } else {
+                baby.classList.remove('singing');
+                lyrics.classList.remove('show');
+            }
+        }
+
+        function makeWish() {
+            alert('🌟✨ Загадай самое заветное желание, Дашенька! Оно обязательно сбудется! ✨🌟\n\nС любовью, твой папа и MyMiniBaby! 💕');
+            createConfetti();
+        }
+
+        createConfetti();
+    </script>
+</body>
+</html>

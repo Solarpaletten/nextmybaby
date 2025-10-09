@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎉 MyMiniBaby 2 — Happy 10th Birthday, Dashenka!</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffb3ec, #ffc9a6, #c2e9fb);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Comic Sans MS", cursive;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 36px;
+    color: #ff3399;
+    text-shadow: 2px 2px 5px white;
+    animation: fadeIn 2s ease-in-out, float 3s ease-in-out infinite alternate;
+  }
+
+  p {
+    color: #444;
+    margin-top: 10px;
+    animation: fadeIn 4s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+
+  .baby {
+    width: 200px;
+    height: 200px;
+    background-image: url("assets/baby.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: dance 2s infinite alternate ease-in-out;
+  }
+
+  @keyframes dance {
+    0% { transform: rotate(-10deg) translateY(0); }
+    50% { transform: rotate(10deg) translateY(-10px); }
+    100% { transform: rotate(-10deg) translateY(0); }
+  }
+
+  audio {
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+  <h1>🎂 Happy 10th Birthday, Dashenka! 💖</h1>
+  <div class="baby"></div>
+  <p>With love — Papa & MyMiniBaby 2 🌈</p>
+  <audio controls autoplay>
+    <source src="assets/happy_birthday.mp3" type="audio/mpeg">
+  </audio>
+</body>
+</html>
