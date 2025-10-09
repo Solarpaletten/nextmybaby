@@ -34,41 +34,75 @@ export class PlayScene extends Phaser.Scene {
   create() {
     const w = this.scale.width;
     const h = this.scale.height;
-
+  
     const cx = w / 2;
     const cy = h / 2;
-
+  
     // малыш
     this.baby = this.add.sprite(cx, cy, 'baby-happy')
       .setScale(0.75)
       .setDepth(1)
       .setInteractive({ draggable: true });
-
+  
     // предметы
     this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
     this.teddy = this.makeItem(w - 100, h - 100, 'teddy', 'play');
     this.crib = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
-
-    // создаём статус в левом верхнем углу
+  
+    // статус
     this.statusText = this.add.text(24, 24, '', {
       font: '16px Arial',
       color: '#ff69b4',
       align: 'left'
     }).setDepth(5);
-
-    // кнопка fullscreen
+  
+    // fullscreen
     this.addFullScreenButton();
-
-    // обработчик ресайза
+  
+    // resize
     this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
       const { width, height } = gameSize;
       this.repositionElements(width, height);
     });
-
-    // теперь безопасно
+  
+    // действия
     this.updateStatusDisplay();
     this.setupDragAndDrop();
+  
+    // 🎵 музыка
+    const music = this.sound.add('bg-music', {
+      loop: true,
+      volume: 0.6,
+    });
+  
+    this.input.once('pointerdown', () => {
+      music.play();
+    });
+  
+    // 🔘 кнопка вкл/выкл
+    const musicToggle = this.add.text(20, h - 40, '🔊 Музыка', {
+      fontSize: '18px',
+      backgroundColor: '#ffffff',
+      color: '#000000',
+      padding: { left: 6, right: 6, top: 2, bottom: 2 },
+    })
+      .setInteractive()
+      .setDepth(10);
+  
+    let musicPlaying = true;
+  
+    musicToggle.on('pointerdown', () => {
+      if (musicPlaying) {
+        music.stop();
+        musicToggle.setText('🔊 Музыка');
+      } else {
+        music.play();
+        musicToggle.setText('🔇 Выключить');
+      }
+      musicPlaying = !musicPlaying;
+    });
   }
+  
 
   const music = this.sound.add('bg-music', {
     loop: true,
@@ -79,27 +113,27 @@ export class PlayScene extends Phaser.Scene {
     music.play();
   });
 
-const musicToggle = this.add.text(20, this.scale.height - 40, '🔊 Музыка', {
-  fontSize: '18px',
-  backgroundColor: '#ffffff',
-  color: '#000000',
-  padding: { left: 6, right: 6, top: 2, bottom: 2 },
-})
+  const musicToggle = this.add.text(20, this.scale.height - 40, '🔊 Музыка', {
+    fontSize: '18px',
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    padding: { left: 6, right: 6, top: 2, bottom: 2 },
+  })
   .setInteractive()
   .setDepth(10);
-
-let musicPlaying = false;
-
-musicToggle.on('pointerdown', () => {
-  if (!musicPlaying) {
-    music.play();
-    musicToggle.setText('🔇 Выключить');
-  } else {
-    music.stop();
-    musicToggle.setText('🔊 Музыка');
-  }
-  musicPlaying = !musicPlaying;
-});
+  
+  let musicPlaying = false;
+  
+  musicToggle.on('pointerdown', () => {
+    if (!musicPlaying) {
+      music.play();
+      musicToggle.setText('🔇 Выключить');
+    } else {
+      music.stop();
+      musicToggle.setText('🔊 Музыка');
+    }
+    musicPlaying = !musicPlaying;
+  });
   
   private repositionElements(w: number, h: number) {
   if (this.baby) this.baby.setPosition(w / 2, h / 2);
