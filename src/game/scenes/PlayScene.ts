@@ -103,37 +103,6 @@ export class PlayScene extends Phaser.Scene {
     });
   }
   
-
-  const music = this.sound.add('bg-music', {
-    loop: true,
-    volume: 0.6, // настрой громкость
-  });
-  
-  this.input.once('pointerdown', () => {
-    music.play();
-  });
-
-  const musicToggle = this.add.text(20, this.scale.height - 40, '🔊 Музыка', {
-    fontSize: '18px',
-    backgroundColor: '#ffffff',
-    color: '#000000',
-    padding: { left: 6, right: 6, top: 2, bottom: 2 },
-  })
-  .setInteractive()
-  .setDepth(10);
-  
-  let musicPlaying = false;
-  
-  musicToggle.on('pointerdown', () => {
-    if (!musicPlaying) {
-      music.play();
-      musicToggle.setText('🔇 Выключить');
-    } else {
-      music.stop();
-      musicToggle.setText('🔊 Музыка');
-    }
-    musicPlaying = !musicPlaying;
-  });
   
   private repositionElements(w: number, h: number) {
   if (this.baby) this.baby.setPosition(w / 2, h / 2);
