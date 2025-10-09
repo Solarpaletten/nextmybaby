@@ -91,7 +91,7 @@ export default function MyBabyPage() {
             onClick={() => setGameLoaded(true)}
             className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg font-semibold"
           >
-            Загрузить игру
+            Нажать получить поздравление от папы!!!
           </button>
         </div>
       ) : (

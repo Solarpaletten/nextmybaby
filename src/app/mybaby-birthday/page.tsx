@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import './styles.css';
+import MyBabyGame from './MyBabyGame'; // 💡 Убедись, что путь корректный
 
 export default function BirthdayPage() {
   const [isSinging, setIsSinging] = useState(false);
 
   useEffect(() => {
-    createConfetti(); // запустить сразу
+    createConfetti(); // запустить сразу при загрузке
   }, []);
 
   const toggleSing = () => {
@@ -36,31 +37,15 @@ export default function BirthdayPage() {
   };
 
   return (
-    <div className="container">
-      <h1>🎉 С Днём Рождения! 🎉</h1>
-      <h2 style={{ color: '#764ba2', marginBottom: '10px' }}>Дашенька!</h2>
-      <div className="age">10 ЛЕТ!</div>
+    <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+      <h1 className="text-3xl font-bold mb-4 text-pink-600">My Mini Baby - Game Edition</h1>
 
-      <div className="stage">
-        <div className={`mybaby ${isSinging ? 'singing' : ''}`} onClick={toggleSing}>
-          <div className="baby-hair"></div>
-          <div className="baby-head">
-            <div className="baby-eye left"></div>
-            <div className="baby-eye right"></div>
-            <div className="baby-nose"></div>
-            <div className="baby-mouth"></div>
-          </div>
-          <div className="baby-arm left"></div>
-          <div className="baby-arm right"></div>
-          <div className="baby-body"></div>
-          <div className="baby-diaper"></div>
-          <div className="baby-leg left"></div>
-          <div className="baby-leg right"></div>
-          <div className="microphone"></div>
-        </div>
+      <div className="mb-6">
+        <MyBabyGame /> {/* 👶 Это Phaser-игра */}
       </div>
 
-      <div className="poem">
+      {/* 🎉 Поздравление (в стихах) */}
+      <div className="bg-white p-6 rounded-xl shadow-md max-w-2xl text-left poem text-lg leading-relaxed">
         <p>🌟 Дашенька, тебе сегодня десять лет,</p>
         <p>Ты умница, талантливее всех на свете нет!</p>
         <p>Рисуешь ты, и лепишь, и танцуешь,</p>
@@ -82,6 +67,27 @@ export default function BirthdayPage() {
         <p>С Днём Рождения, доченька, расти красивой! 🎂✨</p>
       </div>
 
+      {/* 👶 Анимационный малыш */}
+      <div className="stage">
+        <div className={`mybaby ${isSinging ? 'singing' : ''}`} onClick={toggleSing}>
+          <div className="baby-hair"></div>
+          <div className="baby-head">
+            <div className="baby-eye left"></div>
+            <div className="baby-eye right"></div>
+            <div className="baby-nose"></div>
+            <div className="baby-mouth"></div>
+          </div>
+          <div className="baby-arm left"></div>
+          <div className="baby-arm right"></div>
+          <div className="baby-body"></div>
+          <div className="baby-diaper"></div>
+          <div className="baby-leg left"></div>
+          <div className="baby-leg right"></div>
+          <div className="microphone"></div>
+        </div>
+      </div>
+
+      {/* 🎵 Песня и пожелание */}
       <button className="button" onClick={toggleSing}>🎵 Спеть песенку!</button>
       <button className="button" onClick={makeWish}>🌟 Загадать желание!</button>
 
