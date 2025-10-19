@@ -5,7 +5,6 @@ import { RoomManager } from '../managers/RoomManager';
 import { StatsOverlay } from '../ui/StatsOverlay';
 import { SaveMenuUI } from '../ui/SaveMenuUI';
 import { LocalStorageManager } from '../managers/LocalStorageManager';
-import { DayNightManager } from '../managers/DayNightManager';
 
 export class BedroomScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -38,6 +37,18 @@ export class BedroomScene extends Phaser.Scene {
     // Инициализируем RoomManager
     this.roomManager = new RoomManager(this.game);
 
+    // Регистрируем текущую сцену в GameState для уведомлений
+    this.gameState.currentScene = this;
+
+    // Загружаем сохранённое состояние при первом запуске
+    const saved = LocalStorageManager.loadState();
+    if (saved) {
+      LocalStorageManager.applyLoadedState(this.gameState, saved);
+    }
+
+    // Запускаем автосохранение
+    LocalStorageManager.startAutoSave(this.gameState, 30);
+
     // Фон спальни (временно - розовый цвет)
     this.cameras.main.setBackgroundColor('#ffe4e9');
 
@@ -58,13 +69,8 @@ export class BedroomScene extends Phaser.Scene {
     // Stats Overlay (живая панель)
     this.statsOverlay = new StatsOverlay(this);
 
-    // Менеджер дня и ночи
-    this.dayNight = new DayNightManager(this);
-
-    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
-    // ИЛИ
-    // 
-    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
+    // Save Menu UI
+    this.saveMenu = new SaveMenuUI(this);
 
     // UI навигации
     this.createNavigationUI();

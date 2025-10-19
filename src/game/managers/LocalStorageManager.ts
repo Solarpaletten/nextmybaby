@@ -1,6 +1,5 @@
 // src/game/managers/LocalStorageManager.ts
 import { GameState, RoomConfig, Achievement } from '../state/GameState';
-import { BabyState } from '../entities/BabyState';
 
 interface SerializedGameState {
   version: string;

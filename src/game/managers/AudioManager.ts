@@ -80,14 +80,10 @@ export class AudioManager {
    * Запуск музыки
    */
   private startMusic(trackKey: string, fadeIn: boolean): void {
-    if (!this.scene.sound.get(trackKey)) {
-      this.currentMusic = this.scene.sound.add(trackKey, {
-        loop: true,
-        volume: fadeIn ? 0 : this.musicVolume,
-      });
-    } else {
-      this.currentMusic = this.scene.sound.get(trackKey);
-    }
+    this.currentMusic = this.scene.sound.add(trackKey, {
+      loop: true,
+      volume: fadeIn ? 0 : this.musicVolume,
+    });
 
     this.currentMusic.play();
 
@@ -188,8 +184,8 @@ export class AudioManager {
    */
   public setMusicVolume(volume: number): void {
     this.musicVolume = Phaser.Math.Clamp(volume, 0, 1);
-    if (this.currentMusic) {
-      this.currentMusic.setVolume(this.musicVolume);
+    if (this.currentMusic && 'setVolume' in this.currentMusic) {
+      (this.currentMusic as any).setVolume(this.musicVolume);
     }
     this.saveSettings();
   }
