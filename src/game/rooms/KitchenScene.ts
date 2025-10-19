@@ -2,6 +2,7 @@
 import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
+import { StatsOverlay } from '../ui/StatsOverlay';
 
 export class KitchenScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -38,12 +39,17 @@ export class KitchenScene extends Phaser.Scene {
     // this.load.audio('giggle', '/mybaby/audio/effects/giggle.mp3');
   }
 
+
+
   create() {
     // Инициализируем RoomManager
     this.roomManager = new RoomManager(this.game);
 
     // Фон кухни (временно - персиковый)
     this.cameras.main.setBackgroundColor('#ffd4b8');
+    
+    // Статистика поверх комнаты
+    this.statsOverlay = new StatsOverlay(this);
 
     // Малыш в стульчике (центр)
     this.baby = this.add.sprite(400, 320, 'baby-happy');

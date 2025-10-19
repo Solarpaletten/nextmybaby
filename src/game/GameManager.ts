@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import { PlayScene } from './scenes/PlayScene';
 import { BedroomScene } from './rooms/BedroomScene';
 import { KitchenScene } from './rooms/KitchenScene';
-
+import { PlayroomScene } from './rooms/PlayroomScene';
 
 
 export class GameManager {
@@ -25,7 +25,7 @@ export class GameManager {
       backgroundColor: '#fdf2f8',
     
       // 👉 Здесь указываем нужную сцену:
-      scene: [BedroomScene, KitchenScene, PlayScene],
+      scene: [BedroomScene, KitchenScene, PlayroomScene, PlayScene],
     
       physics: {
         default: 'arcade',

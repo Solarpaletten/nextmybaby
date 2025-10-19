@@ -2,6 +2,7 @@
 import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
+import { StatsOverlay } from '../ui/StatsOverlay';
 
 export class BedroomScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -9,7 +10,7 @@ export class BedroomScene extends Phaser.Scene {
   private nightlight!: Phaser.GameObjects.Sprite;
   private gameState: GameState;
   private roomManager!: RoomManager;
-  private statusText!: Phaser.GameObjects.Text;
+  private statsOverlay!: StatsOverlay;
   private navigationUI!: Phaser.GameObjects.Container;
 
   constructor() {

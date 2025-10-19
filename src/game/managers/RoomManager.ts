@@ -33,13 +33,14 @@ export class RoomManager {
     // Проверка: комната разблокирована?
     if (!this.gameState.isRoomUnlocked(nextRoom)) {
       console.log('🔒 Комната заблокирована');
+      this.showLockedMessage();
       return;
     }
 
     console.log(`🚪 Переход: ${this.gameState.currentRoom} → ${nextRoom}`);
 
-    // 1️⃣ Плавное затемнение
-    await this.fadeOut();
+    // 1️⃣ Плавное затемнение (белый fade для мягкости)
+    await this.fadeOut(true);
 
     // 2️⃣ Сохранить состояние текущей комнаты
     this.gameState.saveRoomState(this.gameState.currentRoom);
@@ -61,7 +62,38 @@ export class RoomManager {
     this.playRoomMusic(nextRoom);
 
     // 7️⃣ Плавное проявление
-    await this.fadeIn();
+    await this.fadeIn(true);
+  }
+
+  /**
+   * Показать сообщение о заблокированной комнате
+   */
+  private showLockedMessage(): void {
+    const currentScene = this.game.scene.getScenes(true)[0];
+    if (currentScene) {
+      const text = (currentScene as any).add.text(
+        400, 300,
+        '🔒 Комната заблокирована!\nВыполните условия разблокировки',
+        {
+          fontSize: '20px',
+          color: '#ff6b6b',
+          backgroundColor: '#ffffff',
+          padding: { x: 20, y: 15 },
+          align: 'center',
+        }
+      );
+      text.setOrigin(0.5);
+      text.setDepth(100);
+
+      // Исчезновение через 2 секунды
+      currentScene.tweens.add({
+        targets: text,
+        alpha: 0,
+        duration: 500,
+        delay: 2000,
+        onComplete: () => text.destroy(),
+      });
+    }
   }
 
   /**

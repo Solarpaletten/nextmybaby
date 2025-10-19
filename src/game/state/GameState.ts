@@ -11,6 +11,14 @@ export interface RoomConfig {
   };
 }
 
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  unlocked: boolean;
+  icon: string;
+}
+
 export class GameState {
   private static instance: GameState;
   
@@ -32,6 +40,52 @@ export class GameState {
     totalPlays: 0,
     totalSleeps: 0,
   };
+
+  // Система достижений
+  public achievements: Map<string, Achievement> = new Map([
+    ['firstFeed', {
+      id: 'firstFeed',
+      name: 'Первое кормление',
+      description: 'Покормил малыша первый раз',
+      unlocked: false,
+      icon: '🍼'
+    }],
+    ['threeFeeds', {
+      id: 'threeFeeds',
+      name: 'Заботливый родитель',
+      description: 'Покормил малыша 3 раза',
+      unlocked: false,
+      icon: '🍽️'
+    }],
+    ['firstSleep', {
+      id: 'firstSleep',
+      name: 'Сладкий сон',
+      description: 'Уложил малыша спать',
+      unlocked: false,
+      icon: '😴'
+    }],
+    ['firstPlay', {
+      id: 'firstPlay',
+      name: 'Весёлая игра',
+      description: 'Поиграл с малышом',
+      unlocked: false,
+      icon: '🎮'
+    }],
+    ['unlockedKitchen', {
+      id: 'unlockedKitchen',
+      name: 'Кухня открыта',
+      description: 'Разблокирована кухня',
+      unlocked: false,
+      icon: '🍽️'
+    }],
+    ['unlockedPlayroom', {
+      id: 'unlockedPlayroom',
+      name: 'Игровая открыта',
+      description: 'Разблокирована игровая комната',
+      unlocked: false,
+      icon: '🎮'
+    }],
+  ]);
 
   private constructor() {
     this.babyState = new BabyState();
