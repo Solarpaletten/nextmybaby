@@ -1,4 +1,4 @@
-// src/game/scenes/PlayScene.ts
+// src/game/scenes/PlayScene.ts - Исправленная версия с работающим drag & drop
 import * as Phaser from 'phaser';
 import { BabyState } from '../entities/BabyState';
 
@@ -7,183 +7,162 @@ export class PlayScene extends Phaser.Scene {
   private bottle!: Phaser.GameObjects.Sprite;
   private teddy!: Phaser.GameObjects.Sprite;
   private crib!: Phaser.GameObjects.Sprite;
-  private babyState = new BabyState();
+  private babyState: BabyState;
   private statusText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'PlayScene' });
+    this.babyState = new BabyState();
   }
 
   preload() {
-    this.load.setPath('/mybaby/');
-
-    this.load.on('loaderror', (file: any) => {
-      console.error('Load error:', file?.src || file);
-    });
-    this.load.on('filecomplete-image-baby-happy', () => console.log('baby.png loaded'));
-    this.load.on('complete', () => console.log('All assets loaded'));
-
-    this.load.image('baby-happy', 'baby.png');
-    this.load.image('bottle', 'bottle.png');
-    this.load.image('teddy', 'teddy.png');
-    this.load.image('crib', 'crib.png');
-
-    this.load.audio('bg-music', 'audio/happy_birthday.mp3'); // <-- музыка
+    // Загружаем ассеты
+    this.load.image('baby-happy', '/mybaby/baby.png');
+    this.load.image('bottle', '/mybaby/bottle.png');
+    this.load.image('teddy', '/mybaby/teddy.png');
+    this.load.image('crib', '/mybaby/crib.png');
   }
 
   create() {
-    const w = this.scale.width;
-    const h = this.scale.height;
-  
-    const cx = w / 2;
-    const cy = h / 2;
-  
-    // малыш
-    this.baby = this.add.sprite(cx, cy, 'baby-happy')
-      .setScale(0.75)
-      .setDepth(1)
-      .setInteractive({ draggable: true });
-  
-    // предметы
-    this.bottle = this.makeItem(100, h - 100, 'bottle', 'feed');
-    this.teddy = this.makeItem(w - 100, h - 100, 'teddy', 'play');
-    this.crib = this.makeItem(100, 100, 'crib', 'sleep', 0.8);
-  
-    // статус
-    this.statusText = this.add.text(24, 24, '', {
-      font: '16px Arial',
-      color: '#ff69b4',
-      align: 'left'
-    }).setDepth(5);
-  
-    // fullscreen
-    this.addFullScreenButton();
-  
-    // resize
-    this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
-      const { width, height } = gameSize;
-      this.repositionElements(width, height);
-    });
-  
-    // действия
-    this.updateStatusDisplay();
-    this.setupDragAndDrop();
-  
-    // 🎵 музыка
-    const music = this.sound.add('bg-music', {
-      loop: true,
-      volume: 0.6,
-    });
-  
-    this.input.once('pointerdown', () => {
-      music.play();
-    });
-  
-    // 🔘 кнопка вкл/выкл
-    const musicToggle = this.add.text(20, h - 40, '🔊 Музыка', {
+    // Создаем малыша в центре
+    this.baby = this.add.sprite(400, 300, 'baby-happy');
+    this.baby.setScale(0.8);
+    this.baby.setDepth(1); // Малыш сзади
+
+    // Создаем предметы с правильной настройкой drag & drop
+    this.bottle = this.add.sprite(200, 500, 'bottle');
+    this.bottle.setScale(0.6);
+    this.bottle.setInteractive({ draggable: true });
+    this.bottle.setDepth(2);
+    this.bottle.setData('action', 'feed');
+    this.bottle.setData('originalX', 200);
+    this.bottle.setData('originalY', 500);
+
+    this.teddy = this.add.sprite(300, 500, 'teddy');
+    this.teddy.setScale(0.6);
+    this.teddy.setInteractive({ draggable: true });
+    this.teddy.setDepth(2);
+    this.teddy.setData('action', 'play');
+    this.teddy.setData('originalX', 300);
+    this.teddy.setData('originalY', 500);
+
+    this.crib = this.add.sprite(400, 500, 'crib');
+    this.crib.setScale(0.6);
+    this.crib.setInteractive({ draggable: true });
+    this.crib.setDepth(2);
+    this.crib.setData('action', 'sleep');
+    this.crib.setData('originalX', 400);
+    this.crib.setData('originalY', 500);
+
+    // Статус малыша
+    this.statusText = this.add.text(50, 50, '', {
       fontSize: '18px',
-      backgroundColor: '#ffffff',
-      color: '#000000',
-      padding: { left: 6, right: 6, top: 2, bottom: 2 },
-    })
-      .setInteractive()
-      .setDepth(10);
-  
-    let musicPlaying = true;
-  
-    musicToggle.on('pointerdown', () => {
-      if (musicPlaying) {
-        music.stop();
-        musicToggle.setText('🔊 Музыка');
-      } else {
-        music.play();
-        musicToggle.setText('🔇 Выключить');
-      }
-      musicPlaying = !musicPlaying;
+      color: '#ff69b4'
     });
+
+    // Настраиваем drag & drop
+    this.setupDragAndDrop();
+
+    // Обновляем статус
+    this.updateStatusDisplay();
   }
-  
-  
-  private repositionElements(w: number, h: number) {
-  if (this.baby) this.baby.setPosition(w / 2, h / 2);
-  if (this.bottle) this.bottle.setPosition(100, h - 100);
-  if (this.teddy) this.teddy.setPosition(w - 100, h - 100);
-  if (this.crib) this.crib.setPosition(100, 100);
-  if (this.statusText) this.statusText.setPosition(24, 24);
-}
-
-  private addFullScreenButton() {
-  const button = this.add.text(this.scale.width - 60, 20, '📺', {
-    fontSize: '32px',
-    backgroundColor: '#fff',
-    padding: { left: 8, right: 8, top: 4, bottom: 4 }
-  })
-    .setInteractive()
-    .setScrollFactor(0)
-    .setDepth(10);
-
-  button.on('pointerdown', () => {
-    if (this.scale.isFullscreen) {
-      this.scale.stopFullscreen();
-    } else {
-      this.scale.startFullscreen();
-    }
-  });
-}
-
-  private makeItem(x: number, y: number, key: string, action: string, scale = 0.6) {
-  const s = this.add.sprite(x, y, key).setScale(scale).setDepth(2);
-  s.setInteractive({ draggable: true });
-  s.setData('action', action);
-  return s;
-}
 
   private setupDragAndDrop() {
-  this.input.on('dragstart', (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite) => {
-    obj.setTint(0x808080);
-    obj.setScale(obj.scaleX * 1.1);
-  });
+    // Drag события для всех draggable объектов
+    this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.Sprite) => {
+      gameObject.setTint(0x808080);
+      gameObject.setScale(gameObject.scaleX * 1.1); // Немного увеличиваем при перетаскивании
+    });
 
-  this.input.on(
-    'drag',
-    (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
-      obj.x = dragX;
-      obj.y = dragY;
-    }
-  );
+    this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.Sprite, dragX: number, dragY: number) => {
+      gameObject.x = dragX;
+      gameObject.y = dragY;
+    });
 
-  this.input.on('dragend', (_p: Phaser.Input.Pointer, obj: Phaser.GameObjects.Sprite) => {
-    obj.clearTint();
-    obj.setScale(Math.max(0.4, obj.scaleX / 1.1));
+    this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.Sprite) => {
+      gameObject.clearTint();
+      gameObject.setScale(0.6); // Возвращаем исходный размер
 
-    const near = Phaser.Math.Distance.Between(obj.x, obj.y, this.baby.x, this.baby.y) < 120;
-    if (near) this.applyAction(obj.getData('action'));
-  });
-}
+      // Проверяем, было ли перетаскивание на малыша
+      const distance = Phaser.Math.Distance.Between(
+        gameObject.x, gameObject.y,
+        this.baby.x, this.baby.y
+      );
 
-  private applyAction(action: 'feed' | 'play' | 'sleep') {
-  switch (action) {
-    case 'feed': this.babyState.feedBaby(); break;
-    case 'play': this.babyState.playWithToy(); break;
-    case 'sleep': this.babyState.sleepBaby(); break;
+      if (distance < 100) {
+        this.handleItemUsed(gameObject);
+      } else {
+        // Возвращаем предмет на место
+        this.returnItemToPlace(gameObject);
+      }
+    });
   }
 
-  this.tweens.add({
-    targets: this.baby,
-    scaleX: this.baby.scaleX * 0.95,
-    scaleY: this.baby.scaleY * 0.95,
-    yoyo: true,
-    duration: 180,
-    ease: 'Sine.easeInOut',
-  });
+  private handleItemUsed(item: Phaser.GameObjects.Sprite) {
+    const action = item.getData('action');
+    let newMood: string; // Исправлена ошибка компиляции
 
-  this.updateStatusDisplay();
-}
+    switch (action) {
+      case 'feed':
+        newMood = this.babyState.feedBaby();
+        break;
+      case 'play':
+        newMood = this.babyState.playWithToy();
+        break;
+      case 'sleep':
+        newMood = this.babyState.sleepBaby();
+        break;
+      default:
+        newMood = 'sad';
+    }
+
+    // Обновляем спрайт малыша
+    this.updateBabySprite();
+
+    // Анимация реакции малыша
+    this.tweens.add({
+      targets: this.baby,
+      scaleX: 0.9,
+      scaleY: 0.9,
+      duration: 200,
+      yoyo: true,
+      ease: 'Power2'
+    });
+
+    // Возвращаем предмет на место
+    this.returnItemToPlace(item);
+
+    // Обновляем статус
+    this.updateStatusDisplay();
+
+    console.log(`Использован предмет: ${action}, новое настроение: ${newMood}`);
+  }
+
+  private updateBabySprite() {
+    // Пока используем только одну текстуру
+    this.baby.setTexture('baby-happy');
+  }
+
+  private returnItemToPlace(item: Phaser.GameObjects.Sprite) {
+    const originalX = item.getData('originalX') || 200;
+    const originalY = item.getData('originalY') || 500;
+
+    this.tweens.add({
+      targets: item,
+      x: originalX,
+      y: originalY,
+      duration: 300,
+      ease: 'Power2'
+    });
+  }
 
   private updateStatusDisplay() {
-  const s = this.babyState.getStats();
-  this.statusText.setText(
-    `Настроение: ${s.mood}\nСчастье: ${Math.round(s.happiness)}\nГолод: ${Math.round(s.hunger)}\nЭнергия: ${Math.round(s.energy)}`
-  );
-}
+    const stats = this.babyState.getStats();
+    this.statusText.setText(`
+Настроение: ${stats.mood}
+Счастье: ${Math.round(stats.happiness)}
+Голод: ${Math.round(stats.hunger)}
+Энергия: ${Math.round(stats.energy)}
+    `.trim());
+  }
 }

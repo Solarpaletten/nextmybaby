@@ -1,3 +1,30 @@
+TO DO
+
+import { KitchenScene } from './rooms/KitchenScene';
+
+config.scene = [BedroomScene, KitchenScene];
+```
+
+2. **Обновить BedroomScene** - добавить кнопку перехода на кухню
+
+3. **Создать ассеты:**
+```
+public/mybaby/
+├── rooms/
+│   └── kitchen_bg.jpg
+├── items/kitchen/
+│   ├── highchair.png
+│   ├── spoon.png
+│   ├── apple.png
+│   └── banana.png
+└── audio/
+    ├── ambient/
+    │   └── kitchen_morning.mp3
+    └── effects/
+        ├── nom_nom.mp3
+        └── giggle.mp3
+
+
 fix PlayScene.ts
 
 mybaby/baby.png"  

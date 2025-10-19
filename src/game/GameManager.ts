@@ -1,6 +1,10 @@
 // src/game/GameManager.ts
 import * as Phaser from 'phaser';
 import { PlayScene } from './scenes/PlayScene';
+import { BedroomScene } from './rooms/BedroomScene';
+import { KitchenScene } from './rooms/KitchenScene';
+
+
 
 export class GameManager {
   private game: Phaser.Game | null = null;
@@ -12,15 +16,22 @@ export class GameManager {
       return null;
     }
 
+
+    
+
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: containerId,
       backgroundColor: '#fdf2f8',
-      scene: [PlayScene],
+    
+      // 👉 Здесь указываем нужную сцену:
+      scene: [BedroomScene, KitchenScene, PlayScene],
+    
       physics: {
         default: 'arcade',
         arcade: { gravity: { x: 0, y: 0 }, debug: false }
       },
+    
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -28,6 +39,7 @@ export class GameManager {
         height: window.innerHeight
       }
     };
+    
 
     this.game = new Phaser.Game(config);
 
