@@ -5,11 +5,7 @@ import { RoomManager } from '../managers/RoomManager';
 import { StatsOverlay } from '../ui/StatsOverlay';
 import { DayNightManager } from '../managers/DayNightManager';
 
-this.dayNight = new DayNightManager(this);
-this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
-// ИЛИ
-this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
-
+// В начале класса (после импортов)
 export class BathroomScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
   private bathtub!: Phaser.GameObjects.Graphics;
@@ -22,6 +18,8 @@ export class BathroomScene extends Phaser.Scene {
   private statsOverlay!: StatsOverlay;
   private feedbackText!: Phaser.GameObjects.Text;
   private isBathing: boolean = false;
+  private dayNight?: DayNightManager; // ← ДОБАВИТЬ ЭТУ СТРОКУ
+
 
   constructor() {
     super({ key: 'BathroomScene' });
@@ -74,14 +72,6 @@ export class BathroomScene extends Phaser.Scene {
     // Создаём предметы для купания
     this.createBathItems();
 
-    // Менеджер дня и ночи
-    this.dayNight = new DayNightManager(this);
-
-    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
-    // ИЛИ
-    // 
-    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
-
     // Stats Overlay
     this.statsOverlay = new StatsOverlay(this);
 
@@ -112,6 +102,11 @@ export class BathroomScene extends Phaser.Scene {
 
     // Плавное появление
     this.cameras.main.fadeIn(400, 0, 0, 0);
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
   }
 
   private createBathtub(): void {

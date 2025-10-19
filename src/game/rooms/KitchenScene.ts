@@ -2,6 +2,7 @@
 import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
+import { DayNightManager } from '../managers/DayNightManager';
 
 export class KitchenScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -24,14 +25,14 @@ export class KitchenScene extends Phaser.Scene {
     // Загружаем ассеты кухни
     this.load.image('baby-happy', '/mybaby/baby.png');
     this.load.image('bottle', '/mybaby/bottle.png');
-    
+
     // TODO: Добавить новые ассеты
     // this.load.image('kitchen-bg', '/mybaby/rooms/kitchen_bg.jpg');
     // this.load.image('highchair', '/mybaby/items/kitchen/highchair.png');
     // this.load.image('spoon', '/mybaby/items/kitchen/spoon.png');
     // this.load.image('apple', '/mybaby/items/kitchen/apple.png');
     // this.load.image('banana', '/mybaby/items/kitchen/banana.png');
-    
+
     // TODO: Добавить музыку и звуки
     // this.load.audio('kitchen_morning', '/mybaby/audio/ambient/kitchen_morning.mp3');
     // this.load.audio('nom_nom', '/mybaby/audio/effects/nom_nom.mp3');
@@ -71,6 +72,11 @@ export class KitchenScene extends Phaser.Scene {
 
     // Плавное появление
     this.cameras.main.fadeIn(400, 0, 0, 0);
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
   }
 
   private createFoodItems(): void {
@@ -178,14 +184,15 @@ export class KitchenScene extends Phaser.Scene {
 
   private updateStatusDisplay(): void {
     const stats = this.gameState.babyState.getStats();
-
+    // Удалить эту строку: const totalStats = this.gameState.stats;
+  
     this.statusText.setText(`
-🍽️ Кухня
-Настроение: ${stats.mood}
-Счастье: ${Math.round(stats.happiness)}
-Голод: ${Math.round(stats.hunger)}
-
-📊 Всего кормлений: ${this.gameState.stats.totalFeeds}
+  🍽️ Кухня
+  Настроение: ${stats.mood}
+  Счастье: ${Math.round(stats.happiness)}
+  Голод: ${Math.round(stats.hunger)}
+  
+  📊 Всего кормлений: ${this.gameState.stats.totalFeeds}
     `.trim());
   }
 
@@ -304,7 +311,7 @@ export class KitchenScene extends Phaser.Scene {
 
   private showFeedback(text: string, duration: number = 2000): void {
     this.feedbackText.setText(text);
-    
+
     this.tweens.add({
       targets: this.feedbackText,
       alpha: { from: 0, to: 1 },
