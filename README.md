@@ -22,7 +22,8 @@ public/mybaby/
     │   └── kitchen_morning.mp3
     └── effects/
         ├── nom_nom.mp3
-        └── giggle.mp3
+        └── giggle.mp3 
+        https://www.google.com/search?sca_esv=5555fc7198e53737&rlz=1C5CHFA_enFR1169UA1169&sxsrf=AE3TifNGrIePPkYkmEdXMjgTYcj46uXmSA:1760883469795&udm=7&fbs=AIIjpHx9vDvsDhoNVh33uDjFNyRXpP6ckpRRbvzNtUI-j-5gnRpV0rynAda_xp929_pn7MpLV3M9bkkdiO9frn2OIIUffkx0glUf_qOx2Tr6c-5kRiD7zi2YrGNGNL2yLI8tdHzlBKTisbAY8Q4yrTwwvobLAB4UQoyNKlednyvfsVhpqsRoZ3WjbMUo_4SD4TYKgME73NZvkfqBzX4RharHVli8iIezl7ZXQFEZGEN5E9F379nEL0kP7U6MS_YQoQD9Jh6c2rZ4OZLBDjvlKZ1UQl_0zPwycQ&q=kind+giggle.mp3&sa=X&ved=2ahUKEwis4tSNurCQAxWLRv4FHVWONLoQtKgLegQIJhAB&biw=1680&bih=962&dpr=2#fpstate=ive&vld=cid:dbcba82d,vid:rKYzElJur40,st:0
 
 
 fix PlayScene.ts
