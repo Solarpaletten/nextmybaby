@@ -4,6 +4,7 @@ import { PlayScene } from './scenes/PlayScene';
 import { BedroomScene } from './rooms/BedroomScene';
 import { KitchenScene } from './rooms/KitchenScene';
 import { PlayroomScene } from './rooms/PlayroomScene';
+import { BathroomScene } from './rooms/BathroomScene';
 
 
 export class GameManager {
@@ -25,7 +26,7 @@ export class GameManager {
       backgroundColor: '#fdf2f8',
     
       // 👉 Здесь указываем нужную сцену:
-      scene: [BedroomScene, KitchenScene, PlayroomScene, PlayScene],
+      scene: [BedroomScene, KitchenScene, PlayroomScene, BathroomScene, PlayScene],
     
       physics: {
         default: 'arcade',

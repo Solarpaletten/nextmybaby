@@ -3,6 +3,7 @@ import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
 import { StatsOverlay } from '../ui/StatsOverlay';
+import { DayNightManager } from '../managers/DayNightManager';
 
 export class KitchenScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -65,6 +66,14 @@ export class KitchenScene extends Phaser.Scene {
 
     // Создаем волшебные предметы для кормления
     this.createFoodItems();
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
+    // ИЛИ
+    // 
+    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
 
     // Статус и фидбек
     this.createUI();

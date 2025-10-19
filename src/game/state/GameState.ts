@@ -21,6 +21,7 @@ export interface Achievement {
 
 export class GameState {
   private static instance: GameState;
+  public currentScene?: Phaser.Scene; // Для показа уведомлений
   
   // Состояние комнат
   public currentRoom: string = 'BedroomScene';
@@ -89,6 +90,7 @@ export class GameState {
 
   private constructor() {
     this.babyState = new BabyState();
+    this.loadFromStorage();
   }
 
   // Singleton pattern
@@ -97,6 +99,17 @@ export class GameState {
       GameState.instance = new GameState();
     }
     return GameState.instance;
+  }
+
+  // Загрузка из localStorage
+  private loadFromStorage(): void {
+    // Импортируем динамически для избежания циклических зависимостей
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const saved = localStorage.getItem('babyverse_state');
+      if (saved) {
+        console.log('📂 Найдено сохранение, загрузка...');
+      }
+    }
   }
 
   // Сохранение состояния комнаты
@@ -110,12 +123,25 @@ export class GameState {
     switch (action) {
       case 'feed':
         this.stats.totalFeeds++;
+        // Проверка достижений
+        if (this.stats.totalFeeds === 1) {
+          this.unlockAchievement('firstFeed');
+        }
+        if (this.stats.totalFeeds === 3) {
+          this.unlockAchievement('threeFeeds');
+        }
         break;
       case 'play':
         this.stats.totalPlays++;
+        if (this.stats.totalPlays === 1) {
+          this.unlockAchievement('firstPlay');
+        }
         break;
       case 'sleep':
         this.stats.totalSleeps++;
+        if (this.stats.totalSleeps === 1) {
+          this.unlockAchievement('firstSleep');
+        }
         break;
     }
 
@@ -134,6 +160,13 @@ export class GameState {
         if (currentCount >= count) {
           room.unlocked = true;
           console.log(`🎉 Комната разблокирована: ${room.name}`);
+          
+          // Разблокируем соответствующее достижение
+          if (key === 'KitchenScene') {
+            this.unlockAchievement('unlockedKitchen');
+          } else if (key === 'PlayroomScene') {
+            this.unlockAchievement('unlockedPlayroom');
+          }
         }
       }
     });
@@ -147,5 +180,32 @@ export class GameState {
   // Получение списка доступных комнат
   public getUnlockedRooms(): RoomConfig[] {
     return Array.from(this.rooms.values()).filter(room => room.unlocked);
+  }
+
+  // Разблокировка достижения
+  public unlockAchievement(achievementId: string): void {
+    const achievement = this.achievements.get(achievementId);
+    if (achievement && !achievement.unlocked) {
+      achievement.unlocked = true;
+      console.log(`🏆 Достижение разблокировано: ${achievement.name}`);
+      
+      // Показываем уведомление, если есть активная сцена
+      if (this.currentScene) {
+        // Динамический импорт для избежания циклических зависимостей
+        import('../ui/AchievementNotification').then(module => {
+          new module.AchievementNotification(this.currentScene!, achievement);
+        });
+      }
+    }
+  }
+
+  // Получение всех достижений
+  public getAchievements(): Achievement[] {
+    return Array.from(this.achievements.values());
+  }
+
+  // Получение разблокированных достижений
+  public getUnlockedAchievements(): Achievement[] {
+    return Array.from(this.achievements.values()).filter(a => a.unlocked);
   }
 }

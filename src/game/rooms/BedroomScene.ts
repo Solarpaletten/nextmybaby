@@ -3,6 +3,9 @@ import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
 import { StatsOverlay } from '../ui/StatsOverlay';
+import { SaveMenuUI } from '../ui/SaveMenuUI';
+import { LocalStorageManager } from '../managers/LocalStorageManager';
+import { DayNightManager } from '../managers/DayNightManager';
 
 export class BedroomScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -11,6 +14,7 @@ export class BedroomScene extends Phaser.Scene {
   private gameState: GameState;
   private roomManager!: RoomManager;
   private statsOverlay!: StatsOverlay;
+  private saveMenu!: SaveMenuUI;
   private navigationUI!: Phaser.GameObjects.Container;
 
   constructor() {
@@ -51,8 +55,16 @@ export class BedroomScene extends Phaser.Scene {
     this.crib.setData('originalX', 250);
     this.crib.setData('originalY', 400);
 
-    // Статус малыша
-    this.createStatusDisplay();
+    // Stats Overlay (живая панель)
+    this.statsOverlay = new StatsOverlay(this);
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
+    // ИЛИ
+    // 
+    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
 
     // UI навигации
     this.createNavigationUI();
@@ -62,34 +74,6 @@ export class BedroomScene extends Phaser.Scene {
 
     // Плавное появление
     this.cameras.main.fadeIn(400, 0, 0, 0);
-  }
-
-  private createStatusDisplay(): void {
-    const stats = this.gameState.babyState.getStats();
-    
-    this.statusText = this.add.text(50, 50, '', {
-      fontSize: '16px',
-      color: '#ff69b4',
-      backgroundColor: '#ffffff',
-      padding: { x: 10, y: 10 },
-    });
-    this.statusText.setDepth(10);
-    
-    this.updateStatusDisplay();
-  }
-
-  private updateStatusDisplay(): void {
-    const stats = this.gameState.babyState.getStats();
-    const totalStats = this.gameState.stats;
-    
-    this.statusText.setText(`
-🛏️ Спальня
-Настроение: ${stats.mood}
-Счастье: ${Math.round(stats.happiness)}
-Энергия: ${Math.round(stats.energy)}
-
-📊 Всего снов: ${totalStats.totalSleeps}
-    `.trim());
   }
 
   private createNavigationUI(): void {
@@ -176,7 +160,8 @@ export class BedroomScene extends Phaser.Scene {
     }
 
     this.returnItemToPlace(item);
-    this.updateStatusDisplay();
+    
+    // Stats Overlay обновляется автоматически
     
     // Обновляем навигацию (могли разблокироваться новые комнаты)
     this.navigationUI.destroy();
