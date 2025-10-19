@@ -15,6 +15,7 @@ export class PlayroomScene extends Phaser.Scene {
   private roomManager!: RoomManager;
   private statsOverlay!: StatsOverlay;
   private feedbackText!: Phaser.GameObjects.Text;
+  private dayNight?: DayNightManager; 
 
   constructor() {
     super({ key: 'PlayroomScene' });
@@ -66,14 +67,6 @@ export class PlayroomScene extends Phaser.Scene {
     // Stats Overlay
     this.statsOverlay = new StatsOverlay(this);
 
-    // Менеджер дня и ночи
-    this.dayNight = new DayNightManager(this);
-
-    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
-    // ИЛИ
-    // 
-    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
-
     // Текст обратной связи
     this.feedbackText = this.add.text(400, 120, '', {
       fontSize: '28px',
@@ -94,6 +87,11 @@ export class PlayroomScene extends Phaser.Scene {
 
     // Плавное появление
     this.cameras.main.fadeIn(400, 0, 0, 0);
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
   }
 
   private createToys(): void {

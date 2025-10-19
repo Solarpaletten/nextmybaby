@@ -5,6 +5,7 @@ import { RoomManager } from '../managers/RoomManager';
 import { StatsOverlay } from '../ui/StatsOverlay';
 import { SaveMenuUI } from '../ui/SaveMenuUI';
 import { LocalStorageManager } from '../managers/LocalStorageManager';
+import { DayNightManager } from '../managers/DayNightManager';
 
 export class BedroomScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -15,6 +16,7 @@ export class BedroomScene extends Phaser.Scene {
   private statsOverlay!: StatsOverlay;
   private saveMenu!: SaveMenuUI;
   private navigationUI!: Phaser.GameObjects.Container;
+  private dayNight?: DayNightManager; // ← ДОБАВИТЬ ЭТУ СТРОКУ
 
   constructor() {
     super({ key: 'BedroomScene' });
@@ -80,6 +82,11 @@ export class BedroomScene extends Phaser.Scene {
 
     // Плавное появление
     this.cameras.main.fadeIn(400, 0, 0, 0);
+
+    // Менеджер дня и ночи
+    this.dayNight = new DayNightManager(this);
+
+    this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
   }
 
   private createNavigationUI(): void {

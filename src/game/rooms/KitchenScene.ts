@@ -15,6 +15,7 @@ export class KitchenScene extends Phaser.Scene {
   private roomManager!: RoomManager;
   private statusText!: Phaser.GameObjects.Text;
   private feedbackText!: Phaser.GameObjects.Text;
+  private dayNight?: DayNightManager; 
 
   constructor() {
     super({ key: 'KitchenScene' });
