@@ -40,7 +40,7 @@ export class RoomManager {
     console.log(`🚪 Переход: ${this.gameState.currentRoom} → ${nextRoom}`);
 
     // 1️⃣ Плавное затемнение (белый fade для мягкости)
-    await this.fadeOut(true);
+    await this.fadeOut();
 
     // 2️⃣ Сохранить состояние текущей комнаты
     this.gameState.saveRoomState(this.gameState.currentRoom);
@@ -62,7 +62,7 @@ export class RoomManager {
     this.playRoomMusic(nextRoom);
 
     // 7️⃣ Плавное проявление
-    await this.fadeIn(true);
+    await this.fadeIn();
   }
 
   /**
@@ -127,7 +127,7 @@ export class RoomManager {
   /**
    * Эффект плавного затемнения
    */
-  private fadeOut(): Promise<void> {
+  private fadeOut(useWhite: boolean = false): Promise<void> {
     return new Promise((resolve) => {
       const scenes = this.game.scene.getScenes(true);
       if (scenes.length === 0) {
@@ -136,7 +136,8 @@ export class RoomManager {
       }
 
       const currentScene = scenes[0];
-      currentScene.cameras.main.fadeOut(400, 0, 0, 0);
+      const color = useWhite ? [255, 255, 255] : [0, 0, 0];
+      currentScene.cameras.main.fadeOut(500, ...color);
       
       currentScene.cameras.main.once('camerafadeoutcomplete', () => {
         resolve();
@@ -147,7 +148,7 @@ export class RoomManager {
   /**
    * Эффект плавного проявления
    */
-  private fadeIn(): Promise<void> {
+  private fadeIn(useWhite: boolean = false): Promise<void> {
     return new Promise((resolve) => {
       const scenes = this.game.scene.getScenes(true);
       if (scenes.length === 0) {
@@ -156,7 +157,8 @@ export class RoomManager {
       }
 
       const currentScene = scenes[0];
-      currentScene.cameras.main.fadeIn(400, 0, 0, 0);
+      const color = useWhite ? [255, 255, 255] : [0, 0, 0];
+      currentScene.cameras.main.fadeIn(500, ...color);
       
       currentScene.cameras.main.once('camerafadeincomplete', () => {
         resolve();

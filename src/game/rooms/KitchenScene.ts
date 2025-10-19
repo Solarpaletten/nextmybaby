@@ -2,8 +2,6 @@
 import * as Phaser from 'phaser';
 import { GameState } from '../state/GameState';
 import { RoomManager } from '../managers/RoomManager';
-import { StatsOverlay } from '../ui/StatsOverlay';
-import { DayNightManager } from '../managers/DayNightManager';
 
 export class KitchenScene extends Phaser.Scene {
   private baby!: Phaser.GameObjects.Sprite;
@@ -40,17 +38,12 @@ export class KitchenScene extends Phaser.Scene {
     // this.load.audio('giggle', '/mybaby/audio/effects/giggle.mp3');
   }
 
-
-
   create() {
     // Инициализируем RoomManager
     this.roomManager = new RoomManager(this.game);
 
     // Фон кухни (временно - персиковый)
     this.cameras.main.setBackgroundColor('#ffd4b8');
-    
-    // Статистика поверх комнаты
-    this.statsOverlay = new StatsOverlay(this);
 
     // Малыш в стульчике (центр)
     this.baby = this.add.sprite(400, 320, 'baby-happy');
@@ -66,14 +59,6 @@ export class KitchenScene extends Phaser.Scene {
 
     // Создаем волшебные предметы для кормления
     this.createFoodItems();
-
-    // Менеджер дня и ночи
-    this.dayNight = new DayNightManager(this);
-
-    // this.dayNight.setTimeByRealTime(); // Синхронизация с реальным временем
-    // ИЛИ
-    // 
-    this.dayNight.startAutoCycle(240); // Автоцикл 4 минуты
 
     // Статус и фидбек
     this.createUI();
@@ -193,7 +178,6 @@ export class KitchenScene extends Phaser.Scene {
 
   private updateStatusDisplay(): void {
     const stats = this.gameState.babyState.getStats();
-    const totalStats = this.gameState.stats;
 
     this.statusText.setText(`
 🍽️ Кухня
@@ -201,7 +185,7 @@ export class KitchenScene extends Phaser.Scene {
 Счастье: ${Math.round(stats.happiness)}
 Голод: ${Math.round(stats.hunger)}
 
-📊 Всего кормлений: ${totalStats.totalFeeds}
+📊 Всего кормлений: ${this.gameState.stats.totalFeeds}
     `.trim());
   }
 
